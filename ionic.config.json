@@ -1,6 +1,8 @@
 {
   "name": "videoDownloader",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular",
   "id": "17eb6d74"
 }
