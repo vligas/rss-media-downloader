@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { ToastController, Platform } from '@ionic/angular';
 import { File } from '@ionic-native/file/ngx';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
-
-import axios from 'axios';
-import * as $ from 'jquery';
+import { InstagramDownloaderService } from '../shared/services/instagram-downloader.service';
 
 @Component({
   selector: 'app-home',
@@ -16,87 +14,41 @@ export class HomePage {
   link = '';
   previewSrc = '';
   loading: boolean;
+  metadata: any = {};
 
-  constructor(private toastController: ToastController, private file: File, private transfer: FileTransfer) {}
-
-  createFileName(name, mimetype) {
-    const mimeTypeMap = {
-      'image/jpeg': '.jpg',
-      'video/mp4': '.mp4',
-      'video/ogg': '.ogg',
-      'video/webm': '.webm'
-    };
-    const extension = mimeTypeMap[mimetype];
-    return `${name}${extension}`;
+  constructor(
+    private toastController: ToastController,
+    private platform: Platform,
+    private file: File,
+    private instagramDownloader: InstagramDownloaderService
+  ) {
   }
-
-  getMetadata(html: string) {
-    const $html = $($.parseHTML(html));
-
-    const canonicalUrl = $html.filter('link[rel="canonical"]').attr('href');
-    const isVideo = $html.filter('meta[name="medium"]').attr('content') === 'video';
-    const mimeType = isVideo ? $html.filter('meta[property="og:video:type"]').attr('content') : 'image/jpeg';
-
-    const partsOfCanonicalurl = canonicalUrl.split('/');
-    const indexOfP = partsOfCanonicalurl.indexOf('p');
-    const mediaId = partsOfCanonicalurl[indexOfP + 1];
-    const filename = this.createFileName(mediaId, mimeType);
-    const downloadUrl = isVideo ?
-      $html.filter('meta[property="og:video"]').attr('content') :
-      $html.filter('meta[property="og:image"]').attr('content');
-
-    return {
-      isVideo,
-      mimeType,
-      filename,
-      downloadUrl,
-    };
-
-  }
-
-  // async loading(start: boolean) {
-
-  // }
 
   async downloadPress() {
+    this.previewSrc = '';
+    this.loading = true;
+
     try {
-      this.previewSrc = '';
-      this.loading = true;
-      const htmlResponse = await fetch(this.link);
-      const data = await htmlResponse.text();
-      const metadata = this.getMetadata(data);
+      const { content, metadata } = await this.instagramDownloader.download(this.link);
+      await this.file.writeFile(this.file.externalRootDirectory + '/Download/', metadata.filename, content);
 
-
-        await fetch(metadata.downloadUrl, {
-          method: 'HEAD',
-        });
-
-        this.log('FETCHING VIDEO ...');
-        const mediaResponse = await fetch(metadata.downloadUrl);
-        const media = await mediaResponse.blob();
-        await this.file.writeFile(this.file.externalRootDirectory + '/Download/', metadata.filename, media);
-        this.log('VIDEO FETCHED!');
-        this.previewSrc = URL.createObjectURL(media);
-        // console.log(videoResponse.data);
+      this.metadata = metadata;
+      this.previewSrc = URL.createObjectURL(content);
 
     } catch (e) {
-      const toast = await this.toastController.create({
-        message: e.message,
-        duration: 2000
-      });
-      toast.present();
+      this.toast(e.message);
     }
     finally {
       this.loading = false;
     }
   }
 
-  async log(message) {
+  async toast(message: string) {
     const toast = await this.toastController.create({
       message: message,
       duration: 2000
     });
     toast.present();
-  }
 
+  }
 }

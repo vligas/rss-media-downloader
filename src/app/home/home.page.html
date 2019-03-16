@@ -12,9 +12,8 @@
     <ion-input [(ngModel)]="link" clear-input="true"></ion-input>
   </ion-item>
 </ion-content>
-<div *ngIf="previewSrc !== '' && !loading">
-  <ion-img [src]="previewSrc"></ion-img>
-
+<div *ngIf="previewSrc !== '' && !loading;">
+  <ion-img *ngIf="!metadata.isVideo" [src]="previewSrc"></ion-img>
 </div>
 <div *ngIf="loading">
   Loading...
