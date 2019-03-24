@@ -1,3 +1,4 @@
+import { VideoMetadata } from './../interfaces/video-metadata';
 import { Injectable } from '@angular/core';
 import { DownloaderService } from '../interfaces/downloader-service';
 import * as $ from 'jquery';
@@ -6,7 +7,8 @@ import * as $ from 'jquery';
 export class InstagramDownloaderService implements DownloaderService {
 
   constructor() { }
-  createFileName(name, mimetype) {
+
+  private createFileName(name, mimetype) {
     const mimeTypeMap = {
       'image/jpeg': '.jpg',
       'video/mp4': '.mp4',
@@ -17,7 +19,10 @@ export class InstagramDownloaderService implements DownloaderService {
     return `${name}${extension}`;
   }
 
-  getMetadata(html: string) {
+  public async getMetadata(url: string) {
+    const htmlResponse = await fetch(url);
+    const html = await htmlResponse.text();
+
     const $html = $($.parseHTML(html));
 
     const canonicalUrl = $html.filter('link[rel="canonical"]').attr('href');
@@ -36,24 +41,22 @@ export class InstagramDownloaderService implements DownloaderService {
       isVideo,
       mimeType,
       filename,
-      downloadUrl,
+      formats: [{ url: downloadUrl, label: 'unique' }],
     };
 
   }
 
 
-  async download(url: string) {
+  public async download(url: string) {
 
-    const htmlResponse = await fetch(url);
-    const html = await htmlResponse.text();
-    const metadata = this.getMetadata(html);
+    const metadata = await this.getMetadata(url);
 
 
-    await fetch(metadata.downloadUrl, {
+    await fetch(metadata.formats[0].url, {
       method: 'HEAD',
     });
 
-    const mediaResponse = await fetch(metadata.downloadUrl);
+    const mediaResponse = await fetch(metadata.formats[0].url);
     const media = await mediaResponse.blob();
 
     return {

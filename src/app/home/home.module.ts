@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
 import { SharedModule } from '../shared/shared.module';
+import { BackgroundComponent } from '../background/background.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { SharedModule } from '../shared/shared.module';
       }
     ]),
   ],
-  declarations: [HomePage]
+  declarations: [HomePage, BackgroundComponent]
 })
 export class HomePageModule { }

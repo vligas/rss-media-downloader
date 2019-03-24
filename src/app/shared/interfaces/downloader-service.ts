@@ -1,6 +1,10 @@
+import { VideoMetadata } from './video-metadata';
+
 export interface DownloaderService {
     download(url: string): Promise<{
         content: Blob,
-        metadata: any
+        metadata: VideoMetadata
     }>;
+
+    getMetadata(url: string): Promise<VideoMetadata>;
 }

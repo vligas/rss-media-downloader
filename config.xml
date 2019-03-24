@@ -86,4 +86,10 @@
     <plugin name="cordova-plugin-file-transfer" spec="1.7.1" />
     <engine name="ios" spec="4.5.5" />
     <engine name="android" spec="7.1.4" />
+    <plugin name="cordova-plugin-x-socialsharing" spec="5.4.4">
+        <variable name="ANDROID_SUPPORT_V4_VERSION" value="24.1.1+" />
+    </plugin>
+    <plugin name="cordova-plugin-admob-free" spec="0.25.0">
+        <variable name="ADMOB_APP_ID" value="ca-app-pub-4773482687783964~6346006952" />
+    </plugin>
 </widget>

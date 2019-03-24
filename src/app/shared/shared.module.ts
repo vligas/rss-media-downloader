@@ -1,3 +1,4 @@
+import { YoutubeDownloaderService } from './services/youtube-downloader.service';
 import { InstagramDownloaderService } from './services/instagram-downloader.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -8,7 +9,8 @@ import { CommonModule } from '@angular/common';
     CommonModule,
   ],
   providers: [
-    InstagramDownloaderService
+    InstagramDownloaderService,
+    YoutubeDownloaderService
   ],
   exports: []
 })
