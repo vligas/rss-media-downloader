@@ -1,10 +1,3 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Video Downloader
-    </ion-title>
-  </ion-toolbar>
-</ion-header> -->
 <app-background [color]="brand"></app-background>
 
 <ion-content class="transparent" padding>
@@ -24,20 +17,17 @@
       </ion-item>
     </ion-list>
   </ion-grid>
-  <button class="download-button {{brand}}" (click)="downloadVideo()" [disabled]="!selectedFormat">
-    <ion-icon name="download" *ngIf="!loadingVideo">
-    </ion-icon>
-    <div *ngIf="loadingVideo">
-      {{progress}}
-    </div>
-  </button>
+
+  <app-brand-logo name="facebook"></app-brand-logo>
+  <app-brand-logo name="youtube"></app-brand-logo>
+  <app-brand-logo name="instagram"></app-brand-logo>
+
 </ion-content>
-<!-- <ion-footer>
-  <ion-grid>
-    <ion-row>
-      <ion-col style="text-align: center">
-        <ion-button (click)="downloadVideo()" [disabled]="!selectedFormat">Download</ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-footer> -->
+<button *ngIf="showFooter" class="download-button {{brand}}" [class.loading]="loadingVideo" (click)="downloadVideo()"
+  [disabled]="!selectedFormat && !loadingVideo">
+  <ion-icon name="download" *ngIf="!loadingVideo">
+  </ion-icon>
+  <div *ngIf="loadingVideo">
+    {{progress}}
+  </div>
+</button>

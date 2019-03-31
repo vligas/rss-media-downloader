@@ -12,13 +12,17 @@ import { AdMobFree } from '@ionic-native/admob-free/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BackgroundComponent } from './background/background.component';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({
+      scrollAssist: false,
+      scrollPadding: false
+    }),
     AppRoutingModule,
     SharedModule
   ],
@@ -27,6 +31,7 @@ import { BackgroundComponent } from './background/background.component';
     SplashScreen,
     SocialSharing,
     AdMobFree,
+    Keyboard,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

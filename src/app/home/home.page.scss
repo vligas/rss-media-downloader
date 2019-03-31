@@ -1,12 +1,40 @@
 .download-button {
+
+    &.loading::before {
+        content: '';
+
+        width: 90px;
+        height: 90px;
+        position: absolute;
+        top: 0;
+        left: 4px;
+        display: inline-block;
+        transform: translate(-50%, -50%);
+        border-bottom: 5px solid;
+        animation: rotating 1s linear infinite;
+        border-radius: 50px;        // background: red;
+        &.youtube {
+            border-bottom-color: #c4302b
+        }
+        &.instagram {
+            border-bottom-color: #C13584
+        }
+        &.facebook {
+            border-bottom-color: #3b5998
+        }
+    
+    }
+    
     border-radius: 50%;
     color: #9f9f9f;  
     background-color: white;
     font-size: 30px;
     height: 100px;
     width: 100px;
-    position: absolute;
+    position: fixed;
     bottom:0px;
+    padding-bottom: 0 !important;
+
     // right:25%;
     left:50%;
     transform: translate(-50%, -50%);
@@ -25,3 +53,16 @@
 
     
 }
+
+@keyframes rotating {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .rotating {
+    animation: rotating 2s linear infinite;
+  }
+  

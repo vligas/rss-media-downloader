@@ -1,7 +1,8 @@
 {
   "name": "videoDownloader",
   "integrations": {
-    "cordova": {}
+    "cordova": {},
+    "capacitor": {}
   },
   "type": "angular",
   "id": "17eb6d74"

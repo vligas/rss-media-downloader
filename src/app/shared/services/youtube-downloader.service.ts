@@ -354,15 +354,19 @@ export class YoutubeDownloaderService implements DownloaderService {
     const tokens = await this.getTokens(`https://www.youtube.com${metadata.html5player}`);
     this.decipherFormats(metadata.formats, tokens);
     metadata.formats.forEach(this.addFormatMeta);
+    console.log(metadata.formats);
     metadata.formats = metadata
       .formats
-      .filter(format => format.container === 'mp4' && format.quality_label)
+      .filter(format => format.container === 'mp4' && format.audioBitrate !== null)
       .map(format => {
-        format.label = format.quality_label;
+        format.label = format.resolution;
         return format;
       });
     metadata.formats.sort(this.sortFormats);
+    console.log(metadata.formats);
     metadata.full = true;
+    const oUrl = new URL(url);
+    metadata.filename = oUrl.searchParams.get('v') + '.mp4';
 
     return metadata;
 

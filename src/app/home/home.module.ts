@@ -13,6 +13,7 @@ import { BackgroundComponent } from '../background/background.component';
     CommonModule,
     FormsModule,
     IonicModule,
+    SharedModule,
     RouterModule.forChild([
       {
         path: '',

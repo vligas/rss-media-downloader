@@ -7,7 +7,7 @@ export class ProxyFetchService {
 
   constructor() { }
 
-  proxyUrl = 'https://cors-anywhere.herokuapp.com';
+  proxyUrl = 'https://limitless-scrubland-76570.herokuapp.com';
   // proxyUrl = 'http://localhost:3001';
   fetch(url, options?: RequestInit) {
     return window.fetch(`${this.proxyUrl}/${url}`, {

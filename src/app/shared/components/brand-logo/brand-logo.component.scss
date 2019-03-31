@@ -1,0 +1,41 @@
+$radius:50px;
+
+.brand-container {
+    color: black;
+    margin-top: 50px;
+    width: 200px;
+
+    &.youtube {
+        color: #c4302b
+    }
+    &.instagram {
+        color: #C13584
+    }
+    &.facebook {
+        color: #3b5998
+    }
+
+    .logo {
+        position: absolute;
+        width: $radius;
+        height: $radius;
+        text-align: center;
+        // vertical-align: middle;
+        line-height: $radius + 10px;
+        background-color: white;
+        font-size: 2rem;
+        border-radius: 50%;
+        // box-shadow: 0px 0px 20px 2px #3f3f3f
+    }
+
+    .brand-name {
+        background-color: white;
+        padding-left: 30px;
+        position: relative;
+        top: 11px;
+        border-radius: 0px 15px 15px 0px;
+        line-height: $radius / 2;
+        margin-left: $radius - 10px;
+    }
+}
+

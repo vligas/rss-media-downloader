@@ -25,7 +25,7 @@ export class FacebookDownloaderService implements DownloaderService {
     const html = await response.text();
 
     return {
-      filename: 'algo',
+      filename: new Date().getTime().toString() + '.mp4',
       formats: [{ url: this.highResolutionURL(html), label: 'hd' }, { url: this.lowResolutionURL(html), label: 'sd' }],
       isVideo: true,
       mimeType: 'video/mp4'
