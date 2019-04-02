@@ -13,6 +13,9 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BackgroundComponent } from './background/background.component';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { HTTP } from '@ionic-native/http/ngx';
+
+import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +35,8 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
     SocialSharing,
     AdMobFree,
     Keyboard,
+    HTTP,
+    FileTransfer,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

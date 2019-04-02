@@ -9,6 +9,8 @@ import { VideoMetadata } from '../shared/interfaces/video-metadata';
 import { ProxyFetchService } from '../shared/services/proxy-fetch.service';
 import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free/ngx';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { HTTP } from '@ionic-native/http/ngx';
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 
 const ReadableStream2: any = ReadableStream;
 @Component({
@@ -27,6 +29,7 @@ export class HomePage implements OnInit {
   progress = '0%';
   brand: string;
   showFooter = true;
+  fileTransfer: FileTransferObject = this.transfer.create();
 
   constructor(
     private toastController: ToastController,
@@ -36,7 +39,9 @@ export class HomePage implements OnInit {
     private proxyFetch: ProxyFetchService,
     private admobFree: AdMobFree,
     private platform: Platform,
-    private keyboard: Keyboard
+    private keyboard: Keyboard,
+    private http: HTTP,
+    private transfer: FileTransfer
   ) {
   }
   async ngOnInit() {
@@ -93,7 +98,6 @@ export class HomePage implements OnInit {
   async saveVideo(content: Blob, filename: string) {
     // download(content, filename);
     await this.file.writeFile(this.file.externalRootDirectory + '/Download/', filename, content);
-    await this.socialSharing.share('', '', `${this.file.externalRootDirectory}/Download/${filename}`, this.link);
   }
 
   restartPage() {
@@ -105,23 +109,44 @@ export class HomePage implements OnInit {
 
   }
 
-  downloadVideo() {
+  async downloadVideo() {
     this.loadingVideo = true;
     const url = this.selectedFormat.url;
-    this.proxyFetch.fetch(url)
-      .then(this.downloadProgress.bind(this))
-      .then(response => response.blob())
-      .then(blob => this.saveVideo(blob, this.metadata.filename))
-      .then(_ => {
-        this.loadingVideo = false;
-        this.restartPage();
-      })
-      .catch(e => {
-        this.restartPage();
-        console.error(e);
-        this.toast('Error en la descarga');
-        this.loadingVideo = false;
-      });
+    try {
+      this.fileTransfer.onProgress(this.onProgress.bind(this));
+      await this.fileTransfer.download(url, `${this.file.dataDirectory}/${this.metadata.filename}`);
+      await this.socialSharing.share('', '', `${this.file.dataDirectory}/${this.metadata.filename}`, this.link);
+      this.loadingVideo = false;
+      this.restartPage();
+
+    } catch (e) {
+      this.restartPage();
+      console.error(e);
+      this.toast('Error en la descarga');
+      this.loadingVideo = false;
+    }
+
+    // this.http
+    //   .downloadFile(url, {}, {}, this.file.externalRootDirectory + '/Download/' + this.metadata.filename)
+    //   .then(file => {
+
+    //   })
+    //   .catch(error => {
+    //   });
+    // this.proxyFetch.fetch(url)
+    //   .then(this.downloadProgress.bind(this))
+    //   .then(response => response.blob())
+    //   .then(blob => this.saveVideo(blob, this.metadata.filename))
+    //   .then(_ => {
+    //     this.loadingVideo = false;
+    //     this.restartPage();
+    //   })
+    //   .catch(e => {
+    //     this.restartPage();
+    //     console.error(e);
+    //     this.toast('Error en la descarga');
+    //     this.loadingVideo = false;
+    //   });
   }
 
   async handleURL() {

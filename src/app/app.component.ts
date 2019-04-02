@@ -24,10 +24,11 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
+      // this.statusBar.styleDefault();
+      this.statusBar.styleBlackTranslucent();
       this.splashScreen.hide();
       const bannerConfig: AdMobFreeBannerConfig = {
-        id: 'ca-app-pub-3940256099942544/6300978111',
+        id: 'ca-app-pub-4051415397631703/1639666684',
         // isTesting: true,
         autoShow: true
       };
