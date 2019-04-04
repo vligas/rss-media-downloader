@@ -10,8 +10,8 @@
     </ion-item>
     <ion-list *ngIf="metadata?.formats?.length > 1">
       <ion-item>
-        <ion-label>Calidad</ion-label>
-        <ion-select placeholder="Calidad" [(ngModel)]="selectedFormat">
+        <ion-label>Quality</ion-label>
+        <ion-select [(ngModel)]="selectedFormat">
           <ion-select-option *ngFor="let format of metadata.formats" [value]="format">{{format.label}}
           </ion-select-option>
         </ion-select>

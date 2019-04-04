@@ -88,7 +88,7 @@ export class HomePage implements OnInit {
       } catch (e) {
         this.restartPage();
         console.error(e);
-        this.toast('Error en la descarga');
+        this.toast('Error');
         this.loadingVideo = false;
       }
     }
@@ -144,7 +144,7 @@ export class HomePage implements OnInit {
         this.loadingMetadata = false;
         this.selectedFormat = undefined;
         this.metadata = {};
-        this.toast('No es una URL valida.');
+        this.toast(`isn't a valid url`);
       }
       finally {
         this.loadingMetadata = false;
