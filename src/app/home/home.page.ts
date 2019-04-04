@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ToastController, Platform } from '@ionic/angular';
 import { File } from '@ionic-native/file/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
@@ -41,6 +41,7 @@ export class HomePage implements OnInit {
     private platform: Platform,
     private keyboard: Keyboard,
     private http: HTTP,
+    private change: ChangeDetectorRef,
     private transfer: FileTransfer
   ) {
   }
@@ -56,48 +57,10 @@ export class HomePage implements OnInit {
   }
 
   onProgress(progress) {
+    console.log(progress);
     this.progress = Math.round(progress.loaded / progress.total * 100) + '%';
     console.log(this.progress);
-  }
-  downloadProgress(response) {
-    if (!response.ok) {
-      throw Error(response.status + ' ' + response.statusText);
-    }
-
-    const contentLength = response.headers.get('content-length');
-    const total = parseInt(contentLength, 10);
-    let loaded = 0;
-    const that = this;
-    return new Response(
-      new ReadableStream2({
-        start(controller) {
-          const reader = response.body.getReader();
-
-          read();
-          async function read() {
-            console.log('aqui');
-            const { done, value } = await reader.read();
-            if (done) {
-              controller.close();
-              return;
-            }
-            loaded += value.byteLength;
-            console.log(that);
-            that.onProgress({ loaded, total });
-            controller.enqueue(value);
-            read();
-          }
-        }
-      })
-    );
-  }
-
-
-
-
-  async saveVideo(content: Blob, filename: string) {
-    // download(content, filename);
-    await this.file.writeFile(this.file.externalRootDirectory + '/Download/', filename, content);
+    this.change.detectChanges();
   }
 
   restartPage() {
@@ -110,96 +73,87 @@ export class HomePage implements OnInit {
   }
 
   async downloadVideo() {
-    this.loadingVideo = true;
-    const url = this.selectedFormat.url;
-    try {
-      this.fileTransfer.onProgress(this.onProgress.bind(this));
-      await this.fileTransfer.download(url, `${this.file.dataDirectory}/${this.metadata.filename}`);
-      await this.socialSharing.share('', '', `${this.file.dataDirectory}/${this.metadata.filename}`, this.link);
-      this.loadingVideo = false;
-      this.restartPage();
+    if (!this.loadingVideo) {
+      this.loadingVideo = true;
+      const url = this.selectedFormat.url;
+      try {
+        this.fileTransfer.onProgress(this.onProgress.bind(this));
+        const path = `${this.file.externalRootDirectory}/Download/${this.metadata.filename}`;
+        await this.fileTransfer.download(url, path);
+        (cordova.plugins as any).MediaScannerPlugin.scanFile(path);
+        await this.socialSharing.share('', '', path, this.link);
+        this.loadingVideo = false;
+        this.restartPage();
 
-    } catch (e) {
-      this.restartPage();
-      console.error(e);
-      this.toast('Error en la descarga');
-      this.loadingVideo = false;
+      } catch (e) {
+        this.restartPage();
+        console.error(e);
+        this.toast('Error en la descarga');
+        this.loadingVideo = false;
+      }
     }
 
-    // this.http
-    //   .downloadFile(url, {}, {}, this.file.externalRootDirectory + '/Download/' + this.metadata.filename)
-    //   .then(file => {
-
-    //   })
-    //   .catch(error => {
-    //   });
-    // this.proxyFetch.fetch(url)
-    //   .then(this.downloadProgress.bind(this))
-    //   .then(response => response.blob())
-    //   .then(blob => this.saveVideo(blob, this.metadata.filename))
-    //   .then(_ => {
-    //     this.loadingVideo = false;
-    //     this.restartPage();
-    //   })
-    //   .catch(e => {
-    //     this.restartPage();
-    //     console.error(e);
-    //     this.toast('Error en la descarga');
-    //     this.loadingVideo = false;
-    //   });
   }
 
   async handleURL() {
-    this.previewSrc = '';
-    this.loadingMetadata = true;
-    try {
-      const url = new URL(this.link);
-      let metadata: VideoMetadata;
-      console.log(url.host);
+    if (this.link !== undefined && this.link.trim() !== '') {
 
-      switch (url.host) {
-        case 'youtu.be':
-        case 'www.youtube.com': {
-          let link = url.href;
-          if (url.host === 'youtu.be') {
-            link = `https://www.youtube.com/watch?v=${url.pathname.substring(1)}`;
+      this.previewSrc = '';
+      this.loadingMetadata = true;
+      try {
+        const url = new URL(this.link);
+        let metadata: VideoMetadata;
+        console.log(url.host);
+
+        switch (url.host) {
+          case 'youtu.be':
+          case 'www.youtube.com': {
+            let link = url.href;
+            if (url.host === 'youtu.be') {
+              link = `https://www.youtube.com/watch?v=${url.pathname.substring(1)}`;
+            }
+            metadata = await this.downloader.getMetadata(link, 'youtube');
+            this.brand = 'youtube';
+            break;
           }
-          metadata = await this.downloader.getMetadata(link, 'youtube');
-          this.brand = 'youtube';
-          break;
+
+          case 'www.instagram.com': {
+            metadata = await this.downloader.getMetadata(url.href, 'instagram');
+            this.brand = 'instagram';
+            break;
+          }
+
+          case 'www.facebook.com': {
+            metadata = await this.downloader.getMetadata(url.href, 'facebook');
+            this.brand = 'facebook';
+            break;
+          }
+          default: {
+            throw new Error('Invalid host name');
+          }
         }
 
-        case 'www.instagram.com': {
-          metadata = await this.downloader.getMetadata(url.href, 'instagram');
-          this.brand = 'instagram';
-          break;
+        if (metadata.formats.length === 1) {
+          this.selectedFormat = metadata.formats[0];
         }
+        this.metadata = metadata;
 
-        case 'www.facebook.com': {
-          metadata = await this.downloader.getMetadata(url.href, 'facebook');
-          this.brand = 'facebook';
-          break;
-        }
-        default: {
-          throw new Error('Invalid host name');
-        }
+      } catch (e) {
+        console.log(e);
+        this.brand = '';
+        this.loadingMetadata = false;
+        this.selectedFormat = undefined;
+        this.metadata = {};
+        this.toast('No es una URL valida.');
       }
-
-      if (metadata.formats.length === 1) {
-        this.selectedFormat = metadata.formats[0];
+      finally {
+        this.loadingMetadata = false;
       }
-      this.metadata = metadata;
-
-    } catch (e) {
-      console.log(e);
+    } else {
       this.brand = '';
       this.loadingMetadata = false;
       this.selectedFormat = undefined;
       this.metadata = {};
-      this.toast('No es una URL valida.');
-    }
-    finally {
-      this.loadingMetadata = false;
     }
   }
 

@@ -274,7 +274,7 @@ export class YoutubeDownloaderService implements DownloaderService {
 
     } else {
       const response = await this.proxyFetch.fetch(html5playerfile);
-      const body = await response.text();
+      const body = response.data;
 
       const tokens = this.extractActions(body);
       if (key && (!tokens || !tokens.length)) {
@@ -302,7 +302,7 @@ export class YoutubeDownloaderService implements DownloaderService {
       sts: config.sts
     }).toString();
     const infoResponse = await this.proxyFetch.fetch(infoUrl.href);
-    const body = await infoResponse.text();
+    const body = infoResponse.data;
 
     const info: any = {};
     (new URLSearchParams(body)).forEach((value, key) => {
@@ -337,7 +337,7 @@ export class YoutubeDownloaderService implements DownloaderService {
   public async getMetadata(url: string) {
     const params = 'en';
     const youtubeResponse = await this.proxyFetch.fetch(url);
-    const html = await youtubeResponse.text();
+    const html = youtubeResponse.data;
     const unavailableMsg = this.between(html, '<div id="player-unavailable"', '>');
     if (unavailableMsg &&
       !/\bhid\b/.test(this.between(unavailableMsg, 'class="', '"'))) {
@@ -373,23 +373,23 @@ export class YoutubeDownloaderService implements DownloaderService {
 
   }
 
-  public async download(url: string) {
+  // public async download(url: string) {
 
-    try {
-      const metadata = await this.getMetadata(url);
-      const format = metadata.formats[0];
-      const content = await this.proxyFetch.fetch(format.url);
-      return {
-        content: await content.blob(),
-        metadata: {
-          isVideo: true,
-          mimeType: 'string',
-          filename: 'string',
-          formats: metadata.formats,
-        }
-      };
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  //   try {
+  //     const metadata = await this.getMetadata(url);
+  //     const format = metadata.formats[0];
+  //     const content = await this.proxyFetch.fetch(format.url);
+  //     return {
+  //       content: await content.blob(),
+  //       metadata: {
+  //         isVideo: true,
+  //         mimeType: 'string',
+  //         filename: 'string',
+  //         formats: metadata.formats,
+  //       }
+  //     };
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
 }

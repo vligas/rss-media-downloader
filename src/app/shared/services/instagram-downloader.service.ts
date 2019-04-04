@@ -2,11 +2,12 @@ import { VideoMetadata } from './../interfaces/video-metadata';
 import { Injectable } from '@angular/core';
 import { DownloaderService } from '../interfaces/downloader-service';
 import * as $ from 'jquery';
+import { ProxyFetchService } from './proxy-fetch.service';
 
 @Injectable()
 export class InstagramDownloaderService implements DownloaderService {
 
-  constructor() { }
+  constructor(private proxyFetch: ProxyFetchService) { }
 
   private createFileName(name, mimetype) {
     const mimeTypeMap = {
@@ -20,8 +21,8 @@ export class InstagramDownloaderService implements DownloaderService {
   }
 
   public async getMetadata(url: string) {
-    const htmlResponse = await fetch(url);
-    const html = await htmlResponse.text();
+    const htmlResponse = await this.proxyFetch.fetch(url);
+    const html = htmlResponse.data;
 
     const $html = $($.parseHTML(html));
 

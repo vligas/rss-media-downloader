@@ -29,7 +29,6 @@ export class AppComponent {
       this.splashScreen.hide();
       const bannerConfig: AdMobFreeBannerConfig = {
         id: 'ca-app-pub-4051415397631703/1639666684',
-        // isTesting: true,
         autoShow: true
       };
       this.admobFree.banner.config(bannerConfig);

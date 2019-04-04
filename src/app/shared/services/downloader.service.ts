@@ -32,21 +32,21 @@ export class DownloaderService {
     }
   }
 
-  async download(link: string, source: VideoSource) {
-    switch (source) {
-      case 'facebook': {
-        return await this.facebookDownloader.download(link);
-      }
-      case 'instagram': {
-        return await this.instagramDownloader.download(link);
-      }
-      case 'youtube': {
-        return await this.youtubeDownloader.download(link);
-      }
-      default: {
-        throw new Error('The video source is not supported.');
-      }
-    }
+  // async download(link: string, source: VideoSource) {
+  //   switch (source) {
+  //     case 'facebook': {
+  //       return await this.facebookDownloader.download(link);
+  //     }
+  //     case 'instagram': {
+  //       return await this.instagramDownloader.download(link);
+  //     }
+  //     case 'youtube': {
+  //       return await this.youtubeDownloader.download(link);
+  //     }
+  //     default: {
+  //       throw new Error('The video source is not supported.');
+  //     }
+  //   }
 
-  }
+  // }
 }

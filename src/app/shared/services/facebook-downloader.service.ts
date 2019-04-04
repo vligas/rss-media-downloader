@@ -22,24 +22,13 @@ export class FacebookDownloaderService implements DownloaderService {
 
   async getMetadata(url: string): Promise<VideoMetadata> {
     const response = await this.proxyFetch.fetch(url);
-    const html = await response.text();
+    const html = response.data;
 
     return {
       filename: new Date().getTime().toString() + '.mp4',
       formats: [{ url: this.highResolutionURL(html), label: 'hd' }, { url: this.lowResolutionURL(html), label: 'sd' }],
       isVideo: true,
       mimeType: 'video/mp4'
-    };
-  }
-
-  async download(url: string) {
-
-    const metadata = await this.getMetadata(url);
-    const videoResponse = await this.proxyFetch.fetch(metadata.formats[0].url);
-
-    return {
-      content: await videoResponse.blob(),
-      metadata
     };
   }
 }

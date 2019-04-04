@@ -4,7 +4,8 @@
   <ion-grid>
     <ion-item class="light">
       <ion-label position="floating">Enter a video link</ion-label>
-      <ion-input [disabled]="loadingMetadata" [(ngModel)]="link" (ionBlur)="handleURL()" clear-input="true">
+      <ion-input [disabled]="loadingMetadata || loadingVideo" [(ngModel)]="link" (ionBlur)="handleURL()"
+        clear-input="true">
       </ion-input>
     </ion-item>
     <ion-list *ngIf="metadata?.formats?.length > 1">
@@ -23,8 +24,8 @@
   <app-brand-logo name="instagram"></app-brand-logo>
 
 </ion-content>
-<button *ngIf="showFooter" class="download-button {{brand}}" [class.loading]="loadingVideo" (click)="downloadVideo()"
-  [disabled]="!selectedFormat && !loadingVideo">
+<button *ngIf="showFooter && selectedFormat" class="download-button {{brand}}" [class.loading]="loadingVideo"
+  (click)="downloadVideo()" [disabled]="!selectedFormat && !loadingVideo">
   <ion-icon name="download" *ngIf="!loadingVideo">
   </ion-icon>
   <div *ngIf="loadingVideo">
