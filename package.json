@@ -24,6 +24,7 @@
     "@capacitor/cli": "1.0.0-beta.19",
     "@capacitor/core": "1.0.0-beta.19",
     "@ionic-native/admob-free": "^5.0.0",
+    "@ionic-native/android-permissions": "^5.3.0",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/file": "^5.2.0",
     "@ionic-native/file-transfer": "^5.3.0",
@@ -41,6 +42,7 @@
     "cordova-android": "7.1.4",
     "cordova-plugin-admob-free": "^0.25.0",
     "cordova-plugin-advanced-http": "2.0.6",
+    "cordova-plugin-android-permissions": "1.0.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-file": "^6.0.1",
     "cordova-plugin-file-transfer": "^1.7.1",
@@ -106,7 +108,8 @@
         "ADMOB_APP_ID": "ca-app-pub-4773482687783964~6346006952"
       },
       "cordova-plugin-advanced-http": {},
-      "br.com.brunogrossi.MediaScannerPlugin": {}
+      "br.com.brunogrossi.MediaScannerPlugin": {},
+      "cordova-plugin-android-permissions": {}
     },
     "platforms": [
       "android"

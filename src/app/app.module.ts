@@ -16,6 +16,7 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { HTTP } from '@ionic-native/http/ngx';
 
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,6 +38,7 @@ import { FileTransfer } from '@ionic-native/file-transfer/ngx';
     Keyboard,
     HTTP,
     FileTransfer,
+    AndroidPermissions,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
