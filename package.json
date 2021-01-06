@@ -37,7 +37,7 @@
     "@ionic/pro": "2.0.4",
     "@types/axios": "^0.14.0",
     "@types/jquery": "^3.3.29",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "cordova-admob-sdk": "^0.22.0",
     "cordova-android": "7.1.4",
     "cordova-plugin-admob-free": "^0.25.0",
