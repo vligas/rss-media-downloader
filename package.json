@@ -39,7 +39,7 @@
     "@types/jquery": "^3.3.29",
     "axios": "^0.18.0",
     "cordova-admob-sdk": "^0.22.0",
-    "cordova-android": "7.1.4",
+    "cordova-android": "11.0.0",
     "cordova-plugin-admob-free": "^0.25.0",
     "cordova-plugin-advanced-http": "2.0.6",
     "cordova-plugin-android-permissions": "1.0.0",
